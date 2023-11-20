@@ -8,8 +8,9 @@ from nmb.NetBIOS import NetBIOS
 from tabulate import tabulate
 
 # SMB server details
-server_ip = ''  # Replace with your server IP address
-share_name = ''  # Replace with the name of your shared folder
+server_ip = ''
+share_name = ''
+domain = ''
 
 class bcolors:
     HEADER = '\033[95m'
@@ -151,7 +152,7 @@ if __name__ == '__main__':
                     prog='SMB Spider',
                     description='This script will help enumerate intresting files form a given share',)
     
-    parser.add_argument('-u', default='', metavar='username', help="username of the account")
+    parser.add_argument('-u', default='', metavar='username', help="username of the account. ex : 'domain/username'")
     parser.add_argument('-p', default='', metavar='password', help="password of the account")
     parser.add_argument('-port', choices=['139', '445'], nargs='?', default='445', metavar="destination port", help='Destination port to connect to SMB Server')
     # parser.add_argument('-k', metavar='kerberos login', help='Use Kerberos authentication. Grabs credentials from ccache file '
@@ -174,6 +175,11 @@ if __name__ == '__main__':
         from getpass import getpass
         args.p = getpass("Password:")
 
+    if (args.u != ''):
+        if ('/' in args.u):
+            split = args.u.split('/')
+            args.u = split[1]
+            domain = split[0]
     if args.l is not None:
         for line in args.l:
             interesting_files.append(line.strip())
@@ -184,7 +190,7 @@ if __name__ == '__main__':
             interesting_extensions.extend(['',args.x])
     server_name = get_netBiosName(args.target)
     # Create an SMB connection object
-    conn = SMBConnection(args.u, args.p, 'smbspider', server_name, use_ntlm_v2=False)
+    conn = SMBConnection(args.u, args.p, 'smbspider', server_name, use_ntlm_v2=False, domain=domain)
     share_name = args.share
     server_ip = args.target
     try:
