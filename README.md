@@ -23,9 +23,7 @@ This script will help you enumerate interesting files from a given share, by spe
 
 ## Getting Started
 
-1. Get a free API Key at [https://example.com](https://example.com)
-
-2. Clone the repo
+1. Clone the repo
 
 ```sh
 https://github.com/MarouaneBenchiekh/Smb-Spider
