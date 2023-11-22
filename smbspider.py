@@ -1,7 +1,6 @@
 import sys
 import argparse
 from smb.SMBConnection import SMBConnection
-from yaspin import yaspin
 import pyfiglet
 import socket
 from nmb.NetBIOS import NetBIOS
@@ -31,7 +30,6 @@ interesting_files = []
 interesting_extensions = []
 
 files_found = []
-spinner = yaspin()
 file_count = 0
 
 def clear_line():
@@ -191,7 +189,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
                     prog='SMB Spider',
                     description='This script will help enumerate intresting files form a given share',)
-    
+    parser.add_argument('-s','--share', help="Name of the share to access. If not specified a list of existing shares will be listed.")
     parser.add_argument('-u', default='', metavar='username', help="username of the account. Ex: 'domain/username'")
     parser.add_argument('-p', default='', metavar='password', help="password of the account")
     parser.add_argument('-port', choices=['139', '445'], nargs='?', default='445', metavar="destination port", help='Destination port to connect to SMB Server')
@@ -201,11 +199,10 @@ if __name__ == '__main__':
     #                                                    'line')
     parser.add_argument('-l', type=argparse.FileType('r'), help='input file wordlist of filenames to look for in the smb share.')
     parser.add_argument('-x', default='', metavar='extensions', help="exetension to look for in the smb share. Ex: '-x exe,txt,conf'")
-    parser.add_argument('--download', default='', metavar='download', help="Download all downloaded files ti the given directory. Ex: --download /tmp/")
+    parser.add_argument('--download', default='', metavar='download', help="Retrieve all found files to the given directory, if directory doesn't exist a it will be created. Ex: --download path/to/directory")
     # parser.add_argument("-aesKey", metavar = "hex key",  help='AES key to use for Kerberos Authentication '
     #                                                                         '(128 or 256 bits)')
     parser.add_argument('target', metavar='Target', help="Server name/ip")
-    parser.add_argument('-s','--share', help="Name of the share to access")
     #argcomplete.autocomplete(parser)
 
     print(pyfiglet.figlet_format("Smb Spider", font = "slant" ))
@@ -234,21 +231,22 @@ if __name__ == '__main__':
     conn = SMBConnection(args.u, args.p, 'smbspider', server_name, use_ntlm_v2=False, domain=domain)
     share_name = args.share
     server_ip = args.target
-    # try:
-    print(bcolors.WARNING + '[!] Trying Connection...' + bcolors.ENDC)
-    # Connect to the SMB server
-    conn.connect(args.target)
-    # Check if the connection is successful
+    try:
+        print(bcolors.WARNING + '[!] Trying Connection...' + bcolors.ENDC)
+        # Connect to the SMB server
+        # Check if the connection is successful
 
-    if conn:
-        # List files and directories in the shared folder
-        if args.share is not None:
-            list_files()
+        if conn.connect(args.target):
+            # List files and directories in the shared folder
+            if args.share is not None:
+                list_files()
+            else:
+                list_shares()
+            if args.download != '':
+                file_paths.pop()
+                download_files(args.download)
+            conn.close()
         else:
-            list_shares()
-        if args.download != '':
-            file_paths.pop()
-            download_files(args.download)
-        conn.close()
-    # except:
-    #     print(bcolors.FAIL + '[-] Failed to connect to the SMB server!' + bcolors.ENDC, file=sys.stderr)
+            raise Exception()
+    except:
+        print(bcolors.FAIL + '[-] Failed to connect to the SMB server!' + bcolors.ENDC, file=sys.stderr)
