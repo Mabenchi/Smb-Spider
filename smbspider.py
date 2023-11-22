@@ -197,7 +197,7 @@ if __name__ == '__main__':
     #                                                    '(KRB5CCNAME) based on target parameters. If valid credentials '
     #                                                    'cannot be found, it will use the ones specified in the command '
     #                                                    'line')
-    parser.add_argument('-l', type=argparse.FileType('r'), help='input file wordlist of filenames to look for in the smb share.')
+    parser.add_argument('-l', metavar ='wordlist', type=argparse.FileType('r'), help='input file wordlist of filenames to look for in the smb share.')
     parser.add_argument('-x', default='', metavar='extensions', help="exetension to look for in the smb share. Ex: '-x exe,txt,conf'")
     parser.add_argument('--download', default='', metavar='download', help="Retrieve all found files to the given directory, if directory doesn't exist a it will be created. Ex: --download path/to/directory")
     # parser.add_argument("-aesKey", metavar = "hex key",  help='AES key to use for Kerberos Authentication '
