@@ -187,7 +187,7 @@ def download_files(directory_path):
 # Main
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-                    prog='SMB Spider',
+                    prog='smbspider.py',
                     description='This script will help enumerate intresting files form a given share',)
     parser.add_argument('-s','--share', help="Name of the share to access. If not specified a list of existing shares will be listed.")
     parser.add_argument('-u', default='', metavar='username', help="username of the account. Ex: 'domain/username'")
