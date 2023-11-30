@@ -73,5 +73,6 @@ options:
 ## Upcoming Things
 
   * Adding Option to specify depth to retrieve file from.
-  * Listing/Filtering by files size.
+  * Listing files size.
+  * At download filtering downloaded files by file size.
   * Getting found path(s) in a wordlist type file.
