@@ -16,6 +16,7 @@
 * [About the Project](#about-the-project)
 * [Getting Started](#getting-started)
 * [Usage](#usage)
+* [Upcoming Things](#upcoming-things)
 
 ## About The Project
 
@@ -68,3 +69,9 @@ options:
   -x extensions         exetension to look for in the smb share. Ex: '-x exe,txt,conf'
   --download download   Retrieve all found files to the given directory, if directory doesn't exist a it will be created. Ex: --download path/to/directory
 ```
+
+## Upcoming Things
+
+  * Adding Option to specify depth to retrieve file from.
+  * Listing/Filtering by files size.
+  * Getting found path(s) in a wordlist type file.
